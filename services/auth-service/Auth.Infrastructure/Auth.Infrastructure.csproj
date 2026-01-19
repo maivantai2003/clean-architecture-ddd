@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="MassTransit" Version="8.5.7" />
+    <PackageReference Include="MassTransit.Abstractions" Version="8.5.7" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
+	  <PackageReference Include="Google.Protobuf" Version="3.33.0" />
+	  <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+	  <PackageReference Include="Grpc.Core.Api" Version="2.71.0" />
+	  <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+	  <PackageReference Include="Grpc.Tools" Version="2.72.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="StackExchange.Redis" Version="2.10.1" />
+  </ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="..\Shared.Contracts\Grpcs\auth.proto" GrpcServices="Server" />
+	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Auth.Application\Auth.Application.csproj" />
+    <ProjectReference Include="..\Auth.Domain\Auth.Domain.csproj" />
+    <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

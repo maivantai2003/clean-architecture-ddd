@@ -1,0 +1,6 @@
+@Realtime.WebAPI_HostAddress = http://localhost:5102
+
+GET {{Realtime.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

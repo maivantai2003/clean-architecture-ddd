@@ -1,0 +1,15 @@
+﻿syntax="proto3";
+
+option csharp_namespace = "Shared.Contracts.Grpcs";
+package auth;
+service AuthGrpc {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+}
+message GetUserRequest {
+  string user_id = 1;
+}
+message GetUserResponse {
+  string user_id = 1;
+  string user_name = 2;
+  string email = 3;
+}
