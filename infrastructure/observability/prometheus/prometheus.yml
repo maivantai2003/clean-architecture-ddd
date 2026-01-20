@@ -1,0 +1,26 @@
+global:
+  scrape_interval: 5s
+rule_files:
+  - "alert.rules.yml"
+scrape_configs:
+  - job_name: api-gateway
+    static_configs:
+      - targets: ['api-gateway:80']
+
+  - job_name: auth-service
+    static_configs:
+      - targets: ['auth-service:80']
+
+  - job_name: user-service
+    static_configs:
+      - targets: ['user-service:80']
+  - job_name: realtime-service
+    static_configs:
+      - targets: ['realtime-service:80']
+  - job_name: notification-service
+    static_configs:
+      - targets: ['notification-service:80']
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']

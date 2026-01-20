@@ -1,4 +1,3 @@
-
 using Auth.Application.Config;
 using Auth.Infrastructure.Caching;
 using Auth.Infrastructure.Config;
@@ -10,9 +9,29 @@ using Auth.WebAPI.Middlewares;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Trace;
+using Serilog;
 using StackExchange.Redis;
 using System.Data;
 var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Service", Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "auth-service")
+    .Enrich.WithActivityId()
+    .WriteTo.Console()
+    .CreateLogger();
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing =>
+    {
+        tracing
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddOtlpExporter(opt =>
+            {
+                opt.Endpoint = new Uri(builder.Configuration["Jaeger:Uri"]);
+            });
+    });
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddGrpc();
@@ -43,7 +62,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 
     return ConnectionMultiplexer.Connect(options.ConnectionString);
 });
-
+builder.Host.UseSerilog();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddApplicationConfig();
 builder.Services.AddInfrastructureConfig(builder.Configuration).AddAuthenticationConfig();
@@ -97,6 +116,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<TraceMiddleware>();
 app.MapGrpcService<AuthGrpcService>();
 app.UseMiddleware<ApiResponseMiddleware>();
 app.UseAuthentication();

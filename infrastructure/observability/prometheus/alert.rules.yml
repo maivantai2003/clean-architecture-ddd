@@ -1,0 +1,33 @@
+groups:
+- name: gateway-alerts
+  rules:
+  - alert: GatewayHighErrorRate
+    expr: |
+      rate(gateway_requests_total{status=~"5.."}[1m]) > 5
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Gateway error rate is high"
+      description: "Gateway is returning too many 5xx responses"
+
+- name: auth-alerts
+  rules:
+  - alert: AuthLoginFailureSpike
+    expr: |
+      rate(auth_login_failed_total[1m]) > 10
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High login failure rate"
+      description: "Auth-service login failures exceed threshold"
+
+  - alert: AuthServiceDown
+    expr: |
+      up{job="auth-service"} == 0
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Auth service is down"

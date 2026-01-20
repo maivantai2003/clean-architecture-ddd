@@ -6,9 +6,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="OpenTelemetry" Version="1.14.0" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.22" />
 		<PackageReference Include="Ocelot" Version="24.0.1" />
+		<PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
+		<PackageReference Include="Serilog" Version="4.3.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+		<PackageReference Include="Serilog.Enrichers.Activity" Version="1.0.0.3" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
 		<PackageReference Include="StackExchange.Redis" Version="2.10.1" />
 		<PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
 	</ItemGroup>

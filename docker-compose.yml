@@ -1,1 +1,163 @@
-version: '3.9'
+version: "3.9"
+networks:
+  microservice-net:
+    driver: bridge
+volumes:
+  rabbitmq_data:
+  auth_db_data:
+  user_db_data:
+  auth_redis_data:
+  user_redis_data:
+  
+services:
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks: 
+      - microservice-net
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./infrastructure/observability/promtail/promtail.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks:
+      - microservice-net
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - loki
+    networks:
+      - microservice-net
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: prometheus
+    volumes:
+      - ./infrastructure/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./infrastructure/observability/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+    ports:
+      - "9090:9090"
+    networks: 
+      - microservice-net
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager
+    volumes:
+      - ./infrastructure/observability/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - "9093:9093"
+    networks: 
+      - microservice-net
+  jaeger:
+    image: jaegertracing/all-in-one:1.56
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+    networks: 
+      - microservice-net
+
+  api-gateway:
+    build:
+      context: ./APIGateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - user-service
+    networks:
+      - microservice-net
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: auth-service
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: Host=auth-db;Port=5432;Database=authdb;Username=postgres;Password=postgres
+      Redis__Host: auth-redis
+      RabbitMQ__Host: rabbitmq
+    depends_on:
+      - auth-db
+      - auth-redis
+      - rabbitmq
+    networks:
+      - microservice-net
+
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    networks:
+      - microservice-net
+
+  auth-redis:
+    image: redis:7
+    container_name: auth-redis
+    volumes:
+      - auth_redis_data:/data
+    networks:
+      - microservice-net
+
+  user-service:
+    build:
+      context: ./user-service
+    container_name: user-service
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: Host=user-db;Port=5432;Database=userdb;Username=postgres;Password=postgres
+      Redis__Host: user-redis
+      RabbitMQ__Host: rabbitmq
+    depends_on:
+      - user-db
+      - user-redis
+      - rabbitmq
+    networks:
+      - microservice-net
+
+  user-db:
+    image: postgres:15
+    container_name: user-db
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+    networks:
+      - microservice-net
+
+  user-redis:
+    image: redis:7
+    container_name: user-redis
+    volumes:
+      - user_redis_data:/data
+    networks:
+      - microservice-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - microservice-net
