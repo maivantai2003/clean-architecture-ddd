@@ -1,4 +1,5 @@
 ﻿using Auth.Application.Abstractions.Persistence;
+using Auth.Domain.Entities;
 using MediatR;
 
 namespace Auth.Application.Features.Roles.Commands
@@ -14,7 +15,7 @@ namespace Auth.Application.Features.Roles.Commands
         }
         public async Task<Guid> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
         {
-            var role = new Domain.Entities.Role(request.roleCode, request.roleName, request.description);
+            var role = new Role(request.roleCode, request.roleName, request.description);
             await _roleRepository.AddAsync(role);
             await _unitOfWork.SaveInternalAsync(cancellationToken);
             return role.RoleId;

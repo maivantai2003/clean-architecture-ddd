@@ -1,8 +1,9 @@
 ﻿using Auth.Application.Abstractions.Persistence;
+using MediatR;
 
 namespace Auth.Application.Features.Permissions.Queries
 {
-    public class CheckPermissionQueryHandler
+    public class CheckPermissionQueryHandler : IRequestHandler<CheckPermissionQuery, bool>
     {
         private readonly IPermissionChecker _permissionChecker;
         public CheckPermissionQueryHandler(IPermissionChecker permissionChecker)

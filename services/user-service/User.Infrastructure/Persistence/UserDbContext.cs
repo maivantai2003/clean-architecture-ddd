@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using User.Domain.Common;
-using User.Domain.Entities;
 using User.Infrastructure.Inbox;
 using User.Infrastructure.Outbox;
 

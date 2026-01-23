@@ -24,7 +24,7 @@ namespace Auth.Infrastructure.Config
             services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ICacheService, RedisCacheService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IActionRepository, ActionRepository>();
+            services.AddScoped<IAppActionRepository, AppActionRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddMessagingConfig(configuration);

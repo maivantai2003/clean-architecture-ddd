@@ -7,6 +7,7 @@ namespace Realtime.Infrastructure.SignalR
     public class SignalRPublisher : IRealtimePublisher
     {
         private readonly IHubContext<RealtimeHubBase> _hub;
+        //private readonly IUserConnectionStore _store;
         public SignalRPublisher(IHubContext<RealtimeHubBase> hub) { _hub = hub; }
         public Task BroadcastAsync(string eventName, object payload) => _hub.Clients.All.SendAsync(eventName, payload);
         public Task PushToGroupAsync(string group, string eventName, object payload) => _hub.Clients.Group(group).SendAsync(eventName, payload);

@@ -14,23 +14,23 @@ using Serilog;
 using StackExchange.Redis;
 using System.Data;
 var builder = WebApplication.CreateBuilder(args);
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .Enrich.WithProperty("Service", Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "auth-service")
-    .Enrich.WithActivityId()
-    .WriteTo.Console()
-    .CreateLogger();
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing =>
-    {
-        tracing
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddOtlpExporter(opt =>
-            {
-                opt.Endpoint = new Uri(builder.Configuration["Jaeger:Uri"]);
-            });
-    });
+//Log.Logger = new LoggerConfiguration()
+//    .Enrich.FromLogContext()
+//    .Enrich.WithProperty("Service", Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "auth-service")
+//    .Enrich.WithActivityId()
+//    .WriteTo.Console()
+//    .CreateLogger();
+//builder.Services.AddOpenTelemetry()
+//    .WithTracing(tracing =>
+//    {
+//        tracing
+//            .AddAspNetCoreInstrumentation()
+//            .AddHttpClientInstrumentation()
+//            .AddOtlpExporter(opt =>
+//            {
+//                opt.Endpoint = new Uri(builder.Configuration["Jaeger:Uri"]);
+//            });
+//    });
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -94,20 +94,9 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
-using (var scope=app.Services.CreateScope())
-{
-    var services=scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<AuthDbContext>();
-        await AuthDbContextSeed.SeedAsync(context);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Error seeding database");
-    }
-}
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+await AuthDataSeeder.SeedAsync(db);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -116,9 +105,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseMiddleware<TraceMiddleware>();
-app.MapGrpcService<AuthGrpcService>();
-app.UseMiddleware<ApiResponseMiddleware>();
+//app.UseMiddleware<TraceMiddleware>();
+//app.MapGrpcService<AuthGrpcService>();
+//app.UseMiddleware<ApiResponseMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -7,8 +7,8 @@ namespace Auth.Application.Features.Actions.Commands
     public class CreateActionCommandHandler : IRequestHandler<CreateActionCommand, Guid>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IActionRepository actionRepository;
-        public CreateActionCommandHandler(IUnitOfWork unitOfWork, IActionRepository actionRepository)
+        private readonly IAppActionRepository actionRepository;
+        public CreateActionCommandHandler(IUnitOfWork unitOfWork, IAppActionRepository actionRepository)
         {
             _unitOfWork = unitOfWork;
             this.actionRepository = actionRepository;
@@ -16,7 +16,7 @@ namespace Auth.Application.Features.Actions.Commands
 
         public async Task<Guid> Handle(CreateActionCommand request, CancellationToken cancellationToken)
         {
-            var action = new Domain.Entities.Action
+            var action = new PermissionAction
             {
                 ActionCode = request.Code,
                 ActionName = request.Name,

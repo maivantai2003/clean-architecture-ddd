@@ -14,7 +14,7 @@ namespace Auth.Infrastructure.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Resource> Resources { get; set; }
-        public DbSet<Domain.Entities.Action> Actions { get; set; }
+        public DbSet<PermissionAction> AppActions { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }

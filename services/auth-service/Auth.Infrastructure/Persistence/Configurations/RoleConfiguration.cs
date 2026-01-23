@@ -19,11 +19,15 @@ namespace Auth.Infrastructure.Persistence.Configurations
            .WithOne(rp => rp.Role)
            .HasForeignKey(rp => rp.RoleId)
            .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.Permissions)
+                .WithOne(x => x.Role)
+                .HasForeignKey(x => x.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder
-                .Navigation(r => r.Permissions)
-                .HasField("_permissions")
-                .UsePropertyAccessMode(PropertyAccessMode.Field);
+            //builder
+            //    .Navigation(r => r.Permissions)
+            //    .HasField("_permissions")
+            //    .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

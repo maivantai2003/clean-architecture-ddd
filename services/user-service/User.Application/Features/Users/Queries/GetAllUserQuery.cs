@@ -4,6 +4,6 @@ using User.Application.DTOs;
 
 namespace User.Application.Features.Users.Queries
 {
-    [RequirePermission("Users","Read")]
+    [RequirePermission("User","View")]
     public record GetAllUserQuery() : IRequest<List<UserDTO>>;
 }

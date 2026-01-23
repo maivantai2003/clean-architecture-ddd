@@ -6,8 +6,8 @@ namespace Auth.Application.Features.Actions.Commands
     public class UpdateActionCommandHandler:IRequestHandler<UpdateActionCommand,Unit>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IActionRepository _actionRepository;
-        public UpdateActionCommandHandler(IUnitOfWork unitOfWork,IActionRepository actionRepository)
+        private readonly IAppActionRepository _actionRepository;
+        public UpdateActionCommandHandler(IUnitOfWork unitOfWork,IAppActionRepository actionRepository)
         {
             _unitOfWork = unitOfWork;
             _actionRepository = actionRepository;

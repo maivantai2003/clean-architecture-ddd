@@ -20,14 +20,14 @@ namespace Auth.Infrastructure.Persistence.Configurations
                    .HasMaxLength(10);
             builder.Property(x => x.IsActive)
                    .HasDefaultValue(true);
-            builder.HasOne<Resource>()
+            builder.HasOne(p => p.Resource)
+                  .WithMany()
+                  .HasForeignKey(p => p.ResourceId)
+                  .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(p => p.Action)
                    .WithMany()
-                   .HasForeignKey(p => p.ResourceId)
+                   .HasForeignKey(p => p.ActionId)
                    .OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne<Domain.Entities.Action>()
-               .WithMany()
-               .HasForeignKey(p=> p.ActionId)
-               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

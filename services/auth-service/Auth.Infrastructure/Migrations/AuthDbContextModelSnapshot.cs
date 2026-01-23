@@ -22,33 +22,6 @@ namespace Auth.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Auth.Domain.Entities.Action", b =>
-                {
-                    b.Property<Guid>("ActionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ActionCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ActionName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ActionId");
-
-                    b.HasIndex("ActionCode")
-                        .IsUnique();
-
-                    b.ToTable("actions", (string)null);
-                });
-
             modelBuilder.Entity("Auth.Domain.Entities.Permission", b =>
                 {
                     b.Property<Guid>("PermissionId")
@@ -95,6 +68,33 @@ namespace Auth.Infrastructure.Migrations
                     b.HasIndex("ResourceId");
 
                     b.ToTable("permissions", (string)null);
+                });
+
+            modelBuilder.Entity("Auth.Domain.Entities.PermissionAction", b =>
+                {
+                    b.Property<Guid>("ActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActionCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ActionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ActionId");
+
+                    b.HasIndex("ActionCode")
+                        .IsUnique();
+
+                    b.ToTable("actions", (string)null);
                 });
 
             modelBuilder.Entity("Auth.Domain.Entities.RefreshToken", b =>
@@ -251,6 +251,8 @@ namespace Auth.Infrastructure.Migrations
 
                     b.HasKey("UserRoleId");
 
+                    b.HasIndex("RoleId");
+
                     b.HasIndex("UserId", "RoleId")
                         .IsUnique();
 
@@ -336,17 +338,21 @@ namespace Auth.Infrastructure.Migrations
 
             modelBuilder.Entity("Auth.Domain.Entities.Permission", b =>
                 {
-                    b.HasOne("Auth.Domain.Entities.Action", null)
+                    b.HasOne("Auth.Domain.Entities.PermissionAction", "Action")
                         .WithMany()
                         .HasForeignKey("ActionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Auth.Domain.Entities.Resource", null)
+                    b.HasOne("Auth.Domain.Entities.Resource", "Resource")
                         .WithMany()
                         .HasForeignKey("ResourceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Action");
+
+                    b.Navigation("Resource");
                 });
 
             modelBuilder.Entity("Auth.Domain.Entities.RolePermission", b =>
@@ -370,6 +376,12 @@ namespace Auth.Infrastructure.Migrations
 
             modelBuilder.Entity("Auth.Domain.Entities.UserRole", b =>
                 {
+                    b.HasOne("Auth.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Auth.Domain.Entities.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")

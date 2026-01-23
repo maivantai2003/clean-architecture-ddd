@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StackExchange.Redis;
-using User.Application.Abstractions.Caching;
 
 namespace User.Infrastructure.Caching
 {

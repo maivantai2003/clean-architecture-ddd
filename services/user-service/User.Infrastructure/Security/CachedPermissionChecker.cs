@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using User.Application.Abstractions.Caching;
-using User.Application.Common.Exceptions;
+﻿using User.Application.Common.Exceptions;
 using User.Application.Security;
+using User.Infrastructure.Caching;
 
 namespace User.Infrastructure.Security
 {
@@ -12,13 +11,13 @@ namespace User.Infrastructure.Security
         public CachedPermissionChecker(ICacheService cache,IHttpClientFactory factory)
         {
             _cache = cache;
-            _authClient = factory.CreateClient("auth");
+            _authClient = factory.CreateClient("AuthClient");
         }
 
         public async Task<bool> HasPermissionAsync(Guid userId,string permission,CancellationToken ct)
         {
             var key = $"perm:{userId}.{permission}";
-
+            Console.WriteLine(permission);
             var cached = await _cache.GetAsync<bool?>(key);
             if (cached.HasValue)
                 return cached.Value;
@@ -26,7 +25,8 @@ namespace User.Infrastructure.Security
             var res = await _authClient.GetAsync(
                 $"/permissions/check?userId={userId}&permission={permission}",
                 ct);
-
+            Console.WriteLine(res.StatusCode);
+            Console.WriteLine(res.ToString());
             if (!res.IsSuccessStatusCode)
                 throw new AuthorizationServiceUnavailableException();
 

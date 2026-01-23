@@ -20,10 +20,14 @@ namespace Auth.Infrastructure.Persistence.Configurations
             .HasForeignKey(ur => ur.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            builder
-                .Navigation(u => u.UserRoles)
-                .HasField("_roles")
-                .UsePropertyAccessMode(PropertyAccessMode.Field);
+            //builder
+            //    .Navigation(u => u.UserRoles)
+            //    .HasField("_roles")
+            //    .UsePropertyAccessMode(PropertyAccessMode.Field);
+            builder.HasMany(x => x.UserRoles)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

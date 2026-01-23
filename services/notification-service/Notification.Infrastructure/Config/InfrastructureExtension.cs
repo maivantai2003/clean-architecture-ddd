@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Notification.Application.Abstractions;
 using Notification.Infrastructure.Email;
-using Notification.Infrastructure.Email.Razor;
 using Notification.Infrastructure.Email.Templates;
 using Notification.Infrastructure.Inbox;
 using Notification.Infrastructure.Messaging.Idempotent;

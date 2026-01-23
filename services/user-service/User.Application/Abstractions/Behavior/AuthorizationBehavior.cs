@@ -24,13 +24,11 @@ namespace User.Application.Abstractions.Behavior
                  .GetCustomAttributes<RequirePermissionAttribute>(true)
                  .Select(x => x.Permission)
                  .ToList();
-
             if (!permissions.Any())
                 return await next();
 
             if (!_currentUser.IsAuthenticated)
                 throw new UnauthorizedException("User is not authenticated");
-            Console.WriteLine("Permission: "+ _currentUser.Principal.ToString());
             foreach (var permission in permissions)
             {
                 await _authorization.EnsurePermissionAsync(_currentUser.Principal,permission,ct);

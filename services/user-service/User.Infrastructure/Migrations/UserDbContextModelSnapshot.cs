@@ -22,7 +22,7 @@ namespace User.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("User.Domain.Entities.Users", b =>
+            modelBuilder.Entity("User.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");

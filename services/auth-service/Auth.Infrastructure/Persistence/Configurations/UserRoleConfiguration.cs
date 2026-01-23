@@ -11,6 +11,13 @@ namespace Auth.Infrastructure.Persistence.Configurations
             builder.HasKey(ur => ur.UserRoleId);
             builder.HasIndex(x => new { x.UserId, x.RoleId })
                .IsUnique();
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.UserRoles)
+                .HasForeignKey(x => x.UserId);
+
+            builder.HasOne<Role>()
+                .WithMany()
+                .HasForeignKey(x => x.RoleId);
         }
     }
 }

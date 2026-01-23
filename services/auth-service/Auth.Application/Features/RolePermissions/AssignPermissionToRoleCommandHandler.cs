@@ -15,7 +15,7 @@ namespace Auth.Application.Features.RolePermissions
         }
         public async Task<Unit> Handle(AssignPermissionToRoleCommand request, CancellationToken cancellationToken)
         {
-            var rolePermission = new Domain.Entities.RolePermission(request.RoleId,request.PermissionId);
+            var rolePermission = new RolePermission(request.RoleId,request.PermissionId);
             await _rolePermissionRepository.AddPermissionToRoleAsync(rolePermission);
             await _unitOfWork.SaveInternalAsync(cancellationToken);
             return Unit.Value;

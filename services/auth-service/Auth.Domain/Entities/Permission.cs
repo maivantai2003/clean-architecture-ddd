@@ -9,7 +9,9 @@ namespace Auth.Domain.Entities
         public Guid PermissionId { get; private set; }
         public string Code { get; private set; } = string.Empty;
         public Guid ResourceId { get; private set; }
+        public Resource Resource { get; private set; } = null!;
         public Guid ActionId { get; private set; }
+        public PermissionAction Action { get; private set; } = null!;
         public string ApiEndpoint { get; private set; } = string.Empty;
         public string HttpMethod { get; private set; } = string.Empty;
         public bool IsActive { get; private set; } = true;

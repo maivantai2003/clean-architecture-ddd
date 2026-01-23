@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using User.Application.Abstractions.Caching;
 using User.Application.Abstractions.Persistence;
 using User.Application.Authorization;
 using User.Application.Security;
