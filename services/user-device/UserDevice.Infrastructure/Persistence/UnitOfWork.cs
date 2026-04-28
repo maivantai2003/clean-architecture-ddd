@@ -17,10 +17,10 @@ namespace UserDevice.Infrastructure.Persistence
             _mediator = mediator;
         }
 
-        public async Task BeginTransactionAsync()
+        public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
             if (_transaction == null)
-                _transaction = await _context.Database.BeginTransactionAsync();
+                _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
         }
 
         public async Task CommitAsync()
@@ -42,15 +42,15 @@ namespace UserDevice.Infrastructure.Persistence
                 throw;
             }
         }
-        public async Task CommitInternalAsync()
+        public async Task CommitInternalAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                await SaveInternalAsync();
+                await SaveInternalAsync(cancellationToken);
 
                 if (_transaction != null)
                 {
-                    await _transaction.CommitAsync();
+                    await _transaction.CommitAsync(cancellationToken);
                     await _transaction.DisposeAsync();
                     _transaction = null;
                 }
@@ -61,11 +61,11 @@ namespace UserDevice.Infrastructure.Persistence
                 throw;
             }
         }
-        public async Task RollbackAsync()
+        public async Task RollbackAsync(CancellationToken cancellationToken = default)
         {
             if (_transaction != null)
             {
-                await _transaction.RollbackAsync();
+                await _transaction.RollbackAsync(cancellationToken);
                 await _transaction.DisposeAsync();
                 _transaction = null;
             }

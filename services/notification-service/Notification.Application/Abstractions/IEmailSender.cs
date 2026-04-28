@@ -1,6 +1,4 @@
-﻿using Notification.Application.DTOs;
-
-namespace Notification.Application.Abstractions
+﻿namespace Notification.Application.Abstractions
 {
     public interface IEmailSender
     {

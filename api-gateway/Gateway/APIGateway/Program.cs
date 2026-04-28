@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Prometheus;
-using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 //Log.Logger = new LoggerConfiguration()
 //    .Enrich.FromLogContext()
@@ -80,6 +80,19 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration =
     builder.Configuration["Redis:ConnectionString"];
     options.InstanceName = "gateway:";
+});
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("login-ip-policy", context =>
+        RateLimitPartition.GetSlidingWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                SegmentsPerWindow = 2,
+                QueueLimit = 0
+            }));
 });
 builder.Services
     .AddReverseProxy()

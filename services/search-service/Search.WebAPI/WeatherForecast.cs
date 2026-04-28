@@ -1,4 +1,4 @@
-namespace UserDevice.WebAPI
+namespace Search.WebAPI
 {
     public class WeatherForecast
     {

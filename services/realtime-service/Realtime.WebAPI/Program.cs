@@ -1,7 +1,6 @@
 
 using Realtime.Infrastructure.Config;
 using Realtime.Infrastructure.Security;
-using Realtime.Infrastructure.SignalR;
 using StackExchange.Redis;
 using User.Application.Config;
 

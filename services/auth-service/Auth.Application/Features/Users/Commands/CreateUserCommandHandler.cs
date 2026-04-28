@@ -20,7 +20,11 @@ namespace Auth.Application.Features.Users.Commands
 
         public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var hash= _passwordHasher.Hash(request.PasswordHash);
+            if(await _userRepository.GetByEmailAsync(request.Email) is not null)
+            {
+                return Result<Guid>.Failure("Email đã được sử dụng.");
+            }
+            var hash = _passwordHasher.Hash(request.Password);
             var user = new User(request.userName,request.Email,hash);
             await _userRepository.AddAsync(user);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

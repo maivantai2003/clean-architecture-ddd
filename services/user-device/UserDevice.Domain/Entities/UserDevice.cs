@@ -33,9 +33,35 @@
         => IsTrusted = true;
 
         public void UpdateFirebaseToken(string token)
-            => FirebaseToken = token;
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return;
 
+            if (FirebaseToken == token)
+                return;
+
+            FirebaseToken = token;
+        }
+
+        public void UpdateLocation(string location)
+        {
+            if (string.IsNullOrWhiteSpace(location))
+                return;
+
+            if (Location == location)
+                return;
+
+            Location = location;
+        }
         public void UpdateLastLogin()
-            => LastLoginAt = DateTime.UtcNow;
+        {
+            LastLoginAt = DateTime.UtcNow;
+        }
+        public void UpdateLoginInfo(string? firebaseToken, string? location)
+        {
+            UpdateFirebaseToken(firebaseToken ?? string.Empty);
+            UpdateLocation(location ?? string.Empty);
+            UpdateLastLogin();
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
+using UserDevice.Application.DTOs;
+using UserDevice.Application.Common;
 
-namespace UserDevvice.Application.Abstractions.Behavior
+namespace UserDevice.Application.Abstractions.Behavior
 {
     public class ValidationBehavior<TRequest, TResponse>: IPipelineBehavior<TRequest, TResponse>
     {
@@ -26,12 +28,12 @@ namespace UserDevvice.Application.Abstractions.Behavior
                     .Where(f => f != null)
                     .ToList();
 
-                //if (failures.Any())
-                //{
-                //    return (TResponse)(object)Result.Failure(
-                //        failures[0].ErrorMessage,
-                //        HttpStatus.BadRequest);
-                //}
+                if (failures.Any())
+                {
+                    return (TResponse)(object)Result.Failure(
+                        failures[0].ErrorMessage,
+                        HttpStatus.BadRequest);
+                }
             }
 
             return await next();

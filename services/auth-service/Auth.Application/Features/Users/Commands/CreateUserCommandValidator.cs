@@ -14,7 +14,7 @@ namespace Auth.Application.Features.Users.Commands
                 .NotEmpty()
                 .Matches(@"^[^@\s]+@gmail\.com$")
                 .WithMessage("Email phải có định dạng Gmail hợp lệ.");
-            RuleFor(x => x.PasswordHash)
+            RuleFor(x => x.Password)
                 .NotEmpty()
                 .MinimumLength(6)
                 .WithMessage("Mật khẩu phải có ít nhất 6 ký tự.");

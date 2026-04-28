@@ -8,7 +8,6 @@ namespace User.Infrastructure.Messaging
 {
     public class DomainEventMapper : IDomainEventMapper
     {
-       
         public object Map(object domainEvent)
         {
             return domainEvent switch

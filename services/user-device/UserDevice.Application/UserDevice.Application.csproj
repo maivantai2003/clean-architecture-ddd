@@ -16,6 +16,7 @@
 	</ItemGroup>
   <ItemGroup>
     <Folder Include="Abstractions\Caching\" />
+    <Folder Include="Common\Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UserDevice.Domain\UserDevice.Domain.csproj" />
