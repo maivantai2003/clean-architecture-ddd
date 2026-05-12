@@ -1,6 +1,6 @@
 ﻿using Auth.Application.Abstractions.Persistence;
 using Auth.Application.Abstractions.Security;
-using Auth.Application.DTOs;
+using Auth.Application.Common.Errors;
 using Auth.Domain.Entities;
 using MediatR;
 
@@ -22,7 +22,7 @@ namespace Auth.Application.Features.Users.Commands
         {
             if(await _userRepository.GetByEmailAsync(request.Email) is not null)
             {
-                return Result<Guid>.Failure("Email đã được sử dụng.");
+                return Result<Guid>.Failure(EmailErrors.EmailAlreadyInUse);
             }
             var hash = _passwordHasher.Hash(request.Password);
             var user = new User(request.userName,request.Email,hash);

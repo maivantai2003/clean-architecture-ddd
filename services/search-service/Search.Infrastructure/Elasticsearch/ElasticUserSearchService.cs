@@ -1,5 +1,4 @@
-﻿using Elasticsearch.Net;
-using Microsoft.Extensions.Options;
+﻿
 using Nest;
 using Search.Application.Abstractions.Persistence;
 using Search.Domain.Entities;
@@ -11,10 +10,10 @@ namespace Search.Infrastructure.Elasticsearch
     {
         private readonly IElasticClient _elasticClient;
         private readonly string _indexName;
-        public ElasticUserSearchService(IElasticClient elasticClient, IOptions<ElasticOptions> options)
+        public ElasticUserSearchService(IElasticClient elasticClient, ElasticOptions options)
         {
             _elasticClient = elasticClient;
-            _indexName = options.Value.UserIndex;
+            _indexName = options.UserIndex;
         }
         public async Task DeleteAsync(string id)
         {

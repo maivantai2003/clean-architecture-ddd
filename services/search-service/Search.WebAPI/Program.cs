@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Nest;
 using Search.Application.Config;
 using Search.Infrastructure.Config;
+using Search.Infrastructure.Elasticsearch;
 using Search.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,9 +20,11 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var client = scope.ServiceProvider.GetRequiredService<IElasticClient>();
-    var options = scope.ServiceProvider.GetRequiredService<IOptions<ElasticOptions>>().Value;
+    //var options = scope.ServiceProvider.GetRequiredService<IOptions<ElasticOptions>>().Value;
 
-    await ElasticExtensions.CreateUserIndex(client, options.UserIndex);
+    //await ElasticExtensions.CreateUserIndex(client, options.UserIndex);
+    var initializer = scope.ServiceProvider.GetRequiredService<IElasticInitializer>();
+        await initializer.InitializeAsync();
 }
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

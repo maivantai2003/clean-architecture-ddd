@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Security.Claims;
 using User.Application.Authorization;
-using User.Application.DTOs;
+using User.Application.Common.Errors;
 
 namespace User.Application.Features.Users.Commands
 {

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using User.Application.Abstractions.Persistence;
-using User.Application.DTOs;
+using User.Application.Common.Errors;
 
 namespace User.Application.Features.Users.Commands
 {

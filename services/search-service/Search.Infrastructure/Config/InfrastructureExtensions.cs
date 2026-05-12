@@ -10,7 +10,6 @@ using Search.Infrastructure.Messaging.Configuration;
 using Search.Infrastructure.Messaging.Idempotent;
 using Search.Infrastructure.Outbox;
 using Search.Infrastructure.Persistence;
-using Search.Infrastructure.Messaging.Idempotent;
 namespace Search.Infrastructure.Config
 {
     public static class InfrastructureExtensions
@@ -19,9 +18,12 @@ namespace Search.Infrastructure.Config
         {
             //services.AddDbContext<UserDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.Configure<ElasticOptions>(configuration.GetSection("Elastic"));
+            services.AddSingleton(sp =>
+                sp.GetRequiredService<IOptions<ElasticOptions>>().Value
+            );
             services.AddSingleton<IElasticClient>(sp =>
             {
-                var options = sp.GetRequiredService<IOptions<ElasticOptions>>().Value;
+                var options = sp.GetRequiredService<ElasticOptions>();
 
                 var settings = new ConnectionSettings(new Uri(options.Url))
                     .DefaultIndex(options.UserIndex)
@@ -29,6 +31,9 @@ namespace Search.Infrastructure.Config
 
                 return new ElasticClient(settings);
             });
+            //
+            services.AddScoped<IElasticInitializer, ElasticInitializer>();
+            //
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IOutboxRepository, OutboxRepository>();
             services.AddScoped<IInboxMessageRepository, InboxMessageRepository>();

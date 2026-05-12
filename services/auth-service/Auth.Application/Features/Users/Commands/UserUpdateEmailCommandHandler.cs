@@ -1,5 +1,5 @@
 ﻿using Auth.Application.Abstractions.Persistence;
-using Auth.Application.DTOs;
+using Auth.Application.Common.Errors;
 using Auth.Domain.Entities;
 using MediatR;
 
@@ -17,13 +17,13 @@ namespace Auth.Application.Features.Users.Commands
         public async Task<Result<User>> Handle(UserUpdateEmailCommand request, CancellationToken cancellationToken)
         {
             var user=await _userRepository.GetByIdAsync(request.UserId);
-            if (user == null)
+            if (user is null)
             {
-                return Result<User>.Failure("User not found", Common.HttpStatus.NotFound);
+                return Result<User>.Failure(UserErrors.UserNotFound);
             }
             user.UpdateEmail(request.NewEmail);
             await _unitOfWork.SaveInternalAsync(cancellationToken);
-            return Result<User>.Success(user, Common.HttpStatus.Ok);
+            return Result<User>.Success(user);
         }
     }
 }

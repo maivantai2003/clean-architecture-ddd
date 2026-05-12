@@ -108,6 +108,7 @@ app.UseHttpsRedirection();
 //app.UseMiddleware<TraceMiddleware>();
 //app.MapGrpcService<AuthGrpcService>();
 //app.UseMiddleware<ApiResponseMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

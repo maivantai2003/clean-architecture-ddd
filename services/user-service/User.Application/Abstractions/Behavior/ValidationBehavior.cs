@@ -1,7 +1,7 @@
 ﻿using User.Application.Common;
-using User.Application.DTOs;
 using FluentValidation;
 using MediatR;
+using User.Application.Common.Errors;
 
 namespace User.Application.Abstractions.Behavior
 {
@@ -15,29 +15,26 @@ namespace User.Application.Abstractions.Behavior
             _validators = validators;
         }
 
-        public async Task<TResponse> Handle(
-            TRequest request,
-            RequestHandlerDelegate<TResponse> next,
+        public async Task<TResponse> Handle(TRequest request,RequestHandlerDelegate<TResponse> next,
             CancellationToken cancellationToken)
         {
-            if (_validators.Any())
+            if (!_validators.Any())
             {
-                var context = new ValidationContext<TRequest>(request);
-                var failures = _validators
-                    .Select(v => v.Validate(context))
-                    .SelectMany(r => r.Errors)
-                    .Where(f => f != null)
-                    .ToList();
-
-                if (failures.Any())
-                {
-                    return (TResponse)(object)Result.Failure(
-                        failures[0].ErrorMessage,
-                        HttpStatus.BadRequest);
-                }
+                return await next();
             }
 
-            return await next();
+            var context = new ValidationContext<TRequest>(request);
+            var failures = _validators.Select(v => v.Validate(context))
+                .SelectMany(v => v.Errors)
+                .Where(f => f != null)
+                .ToList();
+            if (!failures.Any())
+            {
+                return await next();
+            }
+            var errors = failures.GroupBy(x => x.PropertyName).ToDictionary(g => g.Key, g => g.Select(x => x.ErrorMessage)
+                        .ToArray());
+            return (TResponse)(object)Result.ValidationFailure(errors);
         }
     }
 }

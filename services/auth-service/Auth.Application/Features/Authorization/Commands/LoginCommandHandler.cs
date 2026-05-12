@@ -1,5 +1,6 @@
 ﻿using Auth.Application.Abstractions.Persistence;
 using Auth.Application.Abstractions.Security;
+using Auth.Application.Common.Errors;
 using Auth.Application.DTOs;
 using Auth.Domain.Entities;
 using MediatR;
@@ -31,47 +32,35 @@ public sealed class LoginCommandHandler: IRequestHandler<LoginCommand, Result<To
         _jwtOptions = jwtOptions;
     }
 
-    public async Task<Result<TokenResponse>> Handle(
-        LoginCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result<TokenResponse>> Handle(LoginCommand request,CancellationToken cancellationToken)
     {
         // 1️⃣ Find user
         var user = await _userRepository.GetByEmailAsync(request.Email);
         if (user is null)
         {
-            return Result<TokenResponse>.Failure("Invalid email or password", Common.HttpStatus.Unauthorized);
+            return Result<TokenResponse>.Failure(AuthErrors.InvalidCredentials);
         }
-
         // 2️⃣ Verify password
         if (!_passwordHasher.Verify(request.Password, user.PasswordHash))
         {
-            return Result<TokenResponse>.Failure(
-                "Invalid email or password",Common.HttpStatus.Unauthorized);
+            return Result<TokenResponse>.Failure(AuthErrors.InvalidCredentials);
         }
         // 3️⃣ Generate tokens
         var claims = MinimalJwtClaims.Create(user);
         var accessToken = _jwtTokenService.GenerateAccessToken(claims);
-
         var refreshTokenValue = _jwtTokenService.GenerateRefreshToken();
         var refreshTokenHash = RefreshToken.Hash(refreshTokenValue);
-
         var refreshToken = RefreshToken.Create(
             user.UserId,
             refreshTokenHash,
             DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenDays)
         );
-
         // 4️⃣ Persist refresh token
         await _refreshTokenRepository.AddAsync(refreshToken);
-
         // 5️⃣ Commit
         await _unitOfWork.SaveInternalAsync(cancellationToken);
-
-        return Result<TokenResponse>.Success(new TokenResponse(
-            accessToken,
-            _jwtOptions.AccessTokenMinutes * 60,
-            refreshTokenValue,
-            _jwtOptions.RefreshTokenDays * 24 * 60 * 60
+        return Result<TokenResponse>.Success(new TokenResponse(accessToken,_jwtOptions.AccessTokenMinutes * 60,
+            refreshTokenValue,_jwtOptions.RefreshTokenDays * 24 * 60 * 60
         ));
     }
 }

@@ -1,4 +1,4 @@
-﻿using Auth.Application.DTOs;
+﻿using Auth.Application.Common.Errors;
 using MediatR;
 
 namespace Auth.Application.Features.Users.Commands

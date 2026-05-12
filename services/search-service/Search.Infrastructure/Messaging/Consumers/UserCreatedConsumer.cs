@@ -11,6 +11,11 @@ namespace Search.Infrastructure.Messaging.Consumers
         private readonly IMediator _mediator;
 
         private readonly IIdempotentExecutor _executor;
+        public UserCreatedConsumer(IMediator mediator, IIdempotentExecutor executor)
+        {
+            _mediator = mediator;
+            _executor = executor;
+        }
         public async Task Consume(ConsumeContext<UserRegisteredIntegrationEvent> context)
         {
             if (context.MessageId==null)

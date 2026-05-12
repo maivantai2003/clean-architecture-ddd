@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <Folder Include="Abstractions\Messaging\" />
+    <Folder Include="Common\Results\" />
     <Folder Include="Features\Actions\Queries\" />
     <Folder Include="Features\Resources\Queries\" />
     <Folder Include="Features\Roles\Queries\" />
     <Folder Include="Features\UserRoles\Queries\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
   <ItemGroup>
