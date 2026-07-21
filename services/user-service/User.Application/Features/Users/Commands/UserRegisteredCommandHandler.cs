@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using User.Application.Abstractions.Persistence;
-using User.Domain.Entities;
+using User.Application.Common.Errors;
 
 namespace User.Application.Features.Users.Commands
 {
-    public class UserRegisteredCommandHandler : IRequestHandler<UserRegisterCommand, Guid>
+    public class UserRegisteredCommandHandler : IRequestHandler<UserRegisterCommand, Result<Guid>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -13,11 +13,11 @@ namespace User.Application.Features.Users.Commands
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task<Guid> Handle(UserRegisterCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(UserRegisterCommand request, CancellationToken cancellationToken)
         {
             if(await _userRepository.GetByIdAsync(request.UserId) is not null)
             {
-                throw new InvalidOperationException("User already exists.");
+                return Result<Guid>.Failure(UserErrors.EmailAlreadyExists);
             }
             var user = new User.Domain.Entities.User(
                 request.UserId,
@@ -27,7 +27,7 @@ namespace User.Application.Features.Users.Commands
                 );
             await _userRepository.AddAsync(user);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return user.UserId;
+            return Result<Guid>.Success(user.UserId);
         }
     }
 }

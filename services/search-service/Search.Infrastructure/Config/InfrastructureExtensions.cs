@@ -17,13 +17,22 @@ namespace Search.Infrastructure.Config
         public static IServiceCollection AddInfrastructureConfig(this IServiceCollection services, IConfiguration configuration)
         {
             //services.AddDbContext<UserDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            //
             services.Configure<ElasticOptions>(configuration.GetSection("Elastic"));
+            //
             services.AddSingleton(sp =>
                 sp.GetRequiredService<IOptions<ElasticOptions>>().Value
             );
             services.AddSingleton<IElasticClient>(sp =>
             {
-                var options = sp.GetRequiredService<ElasticOptions>();
+                //var options = sp.GetRequiredService<ElasticOptions>();
+
+                //var settings = new ConnectionSettings(new Uri(options.Url))
+                //    .DefaultIndex(options.UserIndex)
+                //    .RequestTimeout(TimeSpan.FromSeconds(5));
+
+                //return new ElasticClient(settings);
+                var options = sp.GetRequiredService<IOptions<ElasticOptions>>().Value;
 
                 var settings = new ConnectionSettings(new Uri(options.Url))
                     .DefaultIndex(options.UserIndex)

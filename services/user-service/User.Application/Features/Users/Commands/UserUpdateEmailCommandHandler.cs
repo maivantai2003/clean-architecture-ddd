@@ -18,11 +18,11 @@ namespace User.Application.Features.Users.Commands
             var user = await _userRepository.GetByIdAsync(request.UserId);
             if (user == null)
             {
-                return Result<Domain.Entities.User>.Failure("User not found", Common.HttpStatus.NotFound);
+                return Result<Domain.Entities.User>.Failure(UserErrors.EmailAlreadyExists);
             }
             user.UpdateEmail(request.NewEmail);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return Result<Domain.Entities.User>.Success(user, Common.HttpStatus.Ok);
+            return Result<Domain.Entities.User>.Success(user);
         }
     }
 }

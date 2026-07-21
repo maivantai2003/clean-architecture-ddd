@@ -21,7 +21,7 @@ namespace User.WebAPI.Controllers
         public async Task<IActionResult> GetUsers()
         {
             var response = await _mediator.Send(new GetAllUserQuery());
-            return Ok(response);
+            return response.ToApiResponse(this);
         }
         [HttpPost("email")]
         public async Task<IActionResult> CreateUser([FromBody] UserUpdateEmailCommand userUpdateEmail)
@@ -33,7 +33,7 @@ namespace User.WebAPI.Controllers
         public async Task<IActionResult> GetUser(string id)
         {
             var response = await _mediator.Send(new GetUserQuery(Guid.Parse(id)));
-            return Ok(response);
+            return response.ToApiResponse(this);
         }
     }
 }

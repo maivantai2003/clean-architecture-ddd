@@ -10,8 +10,7 @@ namespace Chat.WebAPI.Controllers
     public sealed class ChatsController : ControllerBase
     {
         private readonly IMediator _mediator;
-
-n        public ChatsController(IMediator mediator)
+        public ChatsController(IMediator mediator)
         {
             _mediator = mediator;
         }
