@@ -1,4 +1,5 @@
 ﻿using Auth.Domain.Common;
+using Auth.Domain.PasswordResetToken.Events;
 using Auth.Domain.Users.Events;
 using System.ComponentModel.DataAnnotations;
 
@@ -58,7 +59,22 @@ namespace Auth.Domain.Entities
             _roles.Add(new UserRole(UserId, roleId));
             AddDomainEvent(new UserRoleAssignedDomainEvent(UserId, roleId));
         }
+        public void RequestPasswordReset(string resetToken,DateTime expiresAtUtc)
+        {
+            //if (!IsActive)
+            //    throw new DomainException(
+            //        "Inactive user cannot request password reset.");
 
+            //if (string.IsNullOrWhiteSpace(resetToken))
+            //    throw new DomainException(
+            //        "Reset token cannot be empty.");
+
+            //if (expiresAtUtc <= DateTime.UtcNow)
+            //    throw new DomainException(
+            //        "Reset token expiration must be in the future.");
+
+            AddDomainEvent(new PasswordResetRequestedDomainEvent(UserId,Email,resetToken,expiresAtUtc));
+        }
         public void RemoveRole(Guid roleId)
         {
             var role = _roles.FirstOrDefault(r => r.RoleId == roleId);

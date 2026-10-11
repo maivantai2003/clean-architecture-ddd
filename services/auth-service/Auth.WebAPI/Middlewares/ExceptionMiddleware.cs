@@ -1,4 +1,6 @@
-﻿namespace Auth.WebAPI.Middlewares
+﻿using Auth.WebAPI.DTOs;
+
+namespace Auth.WebAPI.Middlewares
 {
     public class ExceptionMiddleware
     {
@@ -44,5 +46,22 @@
                     });
             }
         }
+        //private static async Task HandleExceptionAsync(HttpContext context,Exception exception)
+        //{
+        //    context.Response.ContentType =
+        //        "application/json";
+
+        //    context.Response.StatusCode = 500;
+
+        //    var response = new ApiResponse<object>
+        //    {
+        //        Success = false,
+        //        Error = new Error("System.InternalError",
+        //            "An unexpected error occurred."),
+        //        TraceId = context.TraceIdentifier
+        //    };
+
+        //    await context.Response.WriteAsJsonAsync(response);
+        //}
     }
 }

@@ -10,6 +10,7 @@ using User.Infrastructure.Inbox;
 using User.Infrastructure.Messaging;
 using User.Infrastructure.Messaging.Configuration;
 using User.Infrastructure.Messaging.Idempotent;
+using User.Infrastructure.Messaging.Kafka;
 using User.Infrastructure.Persistence;
 using User.Infrastructure.Persistence.Repositories;
 using User.Infrastructure.Security;
@@ -24,6 +25,7 @@ namespace User.Infrastructure.Config
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICacheService, RedisCacheService>();
             services.AddMessagingConfig(configuration);
+            services.AddKafkaConfig(configuration);
             services.AddHostedService<OutboxProcessor>();
             services.AddScoped<IDomainEventMapper, DomainEventMapper>();
             services.AddScoped<IInboxMessageRepository, InboxMessageRepository>();

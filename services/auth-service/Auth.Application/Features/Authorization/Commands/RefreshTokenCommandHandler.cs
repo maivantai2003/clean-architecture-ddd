@@ -28,8 +28,7 @@ public sealed class RefreshTokenCommandHandler
         _jwtOptions = jwtOptions;
     }
 
-    public async Task<TokenResponse> Handle(RefreshTokenCommand request,
-        CancellationToken cancellationToken)
+    public async Task<TokenResponse> Handle(RefreshTokenCommand request,CancellationToken cancellationToken)
     {
         // 1️⃣ Hash refresh token
         var tokenHash = RefreshToken.Hash(request.RefreshToken);

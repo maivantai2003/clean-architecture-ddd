@@ -19,7 +19,7 @@ namespace Auth.Application.Common.Errors
         }
 
         public static Result Success()
-            => new(true, null);
+            => new(true, Error.None);
         public static Result Failure(Error error)
             => new(false, error);
 

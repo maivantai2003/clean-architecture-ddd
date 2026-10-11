@@ -4,6 +4,7 @@ using Auth.Application.Common.Errors;
 using Auth.Application.DTOs;
 using Auth.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Auth.Application.Features.Authorization.Commands;
 
@@ -15,19 +16,19 @@ public sealed class LoginCommandHandler: IRequestHandler<LoginCommand, Result<To
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenLifetimeProvider _jwtOptions;
-
-    public LoginCommandHandler(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
+    private readonly ILogger<LoginCommandHandler> _logger;
+    public LoginCommandHandler(IUserRepository userRepository,IPasswordHasher passwordHasher,
         IJwtTokenService jwtTokenService,
         IRefreshTokenRepository refreshTokenRepository,
         IUnitOfWork unitOfWork,
-        ITokenLifetimeProvider jwtOptions)
+        ITokenLifetimeProvider jwtOptions,
+        ILogger<LoginCommandHandler> logger)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenService = jwtTokenService;
         _refreshTokenRepository = refreshTokenRepository;
+        _logger = logger;
         _unitOfWork = unitOfWork;
         _jwtOptions = jwtOptions;
     }
@@ -59,6 +60,7 @@ public sealed class LoginCommandHandler: IRequestHandler<LoginCommand, Result<To
         await _refreshTokenRepository.AddAsync(refreshToken);
         // 5️⃣ Commit
         await _unitOfWork.SaveInternalAsync(cancellationToken);
+        _logger.LogInformation("User {UserId} logged in successfully", user.UserId);
         return Result<TokenResponse>.Success(new TokenResponse(accessToken,_jwtOptions.AccessTokenMinutes * 60,
             refreshTokenValue,_jwtOptions.RefreshTokenDays * 24 * 60 * 60
         ));

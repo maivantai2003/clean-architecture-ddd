@@ -16,6 +16,7 @@ namespace Notification.Infrastructure.Config
             services.AddScoped<IWelcomeEmailTemplate, WelcomeEmailTemplate>();
             services.AddScoped<IIdempotentExecutor, InboxConsumerExecutor>();
             services.AddScoped<IInboxMessageRepository, InboxMessageRepository>();
+            services.AddScoped<IPasswordResetEmailTemplate, PasswordResetEmailTemplate>();
             //services.AddScoped<IRazorViewRenderer, RazorViewRenderer>();
             return services;
         }

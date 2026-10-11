@@ -44,6 +44,8 @@ namespace Auth.Infrastructure.Config
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             services.AddSingleton<ITokenLifetimeProvider, TokenLifetimeProvider>();
+            services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
+            services.AddScoped<IPasswordResetTokenGenerator, PasswordResetTokenGenerator>();
             return services;
         }
     }

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Serilog" Version="4.4.0" />
+	  <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+	  <PackageReference Include="Serilog.Enrichers.Activity" Version="1.0.0.3" />
+	  <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Notification.Application\Notification.Application.csproj" />
     <ProjectReference Include="..\Notification.Infrastructure\Notification.Infrastructure.csproj" />
+	<ProjectReference Include="..\..\BuildingBlocks\Observability\Observability.csproj" />
   </ItemGroup>
 
 </Project>

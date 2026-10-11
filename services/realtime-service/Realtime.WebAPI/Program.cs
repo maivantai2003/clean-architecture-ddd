@@ -9,7 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR();
+//builder.Services.AddSignalR().AddStackExchangeRedis(builder.Configuration["Redis:ConnectionString"]!,
+//    options =>
+//    {
+//        options.Configuration.ChannelPrefix = "Realtime";
+//    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,9 +25,9 @@ builder.Services.AddOptions<JwtOptions>()
     .ValidateOnStart();
 builder.Services.AddInfrastructureConfig(builder.Configuration).AddAuthenticationConfig();
 builder.Services.AddApplicationConfig();
-builder.Services.AddSingleton<IConnectionMultiplexer>(
-    _ => ConnectionMultiplexer.Connect(builder.Configuration["Redis:ConnectionString"])
-);
+//builder.Services.AddSingleton<IConnectionMultiplexer>(
+//    _ => ConnectionMultiplexer.Connect(builder.Configuration["Redis:ConnectionString"])
+//);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("SignalRCors", policy =>

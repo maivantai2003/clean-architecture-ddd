@@ -21,6 +21,7 @@ namespace Auth.Infrastructure.Persistence
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
         public DbSet<InboxMessage> InboxMessages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

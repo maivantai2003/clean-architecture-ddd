@@ -27,5 +27,23 @@ namespace Auth.WebAPI.Controllers
             var response = await _mediator.Send(loginCommand);
             return response.ToApiResponse(this);
         }
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return response.ToApiResponse(this);
+        }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return response.ToApiResponse(this);
+        }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return response.ToApiResponse(this);
+        }
     }
 }

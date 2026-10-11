@@ -1,0 +1,108 @@
+services:
+  otel-collector:
+      image: otel/opentelemetry-collector-contrib:latest
+      command:
+        - "--config=/etc/otelcol-contrib/config.yaml"
+      volumes:
+        - ./otel-collector-config.yml:/etc/otelcol-contrib/config.yaml
+      ports:
+        - "4317:4317"
+        - "4318:4318"
+        - "8889:8889"
+      networks:
+        - microservice-net
+  redis:
+      image: redis:7
+      container_name: redis-microservice
+      ports:
+        - "6379:6379"
+      volumes:
+        - redis_data:/data
+      networks:
+        - microservice-net
+  rabbit-mq:
+      image: rabbitmq:3-management
+      container_name: rabbitmq-dev
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+      volumes:
+        - rabbitmq_data:/var/lib/rabbitmq
+      networks:
+        - microservice-net
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - microservice-net
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.15.0
+    container_name: logstash
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
+    networks:
+      - microservice-net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - microservice-net
+  jaeger:
+    image: jaegertracing/jaeger:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      # - "4317:4317"
+      # - "4318:4318"
+    networks:
+      - microservice-net
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - otel-collector
+    networks:
+      - microservice-net
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - microservice-net
+volumes:
+  elasticsearch_data:
+  redis_data:
+  rabbitmq_data:
+  grafana_data:
+networks:
+  microservice-net:

@@ -13,7 +13,7 @@ namespace Auth.Infrastructure.Inbox
         public async Task AddAsync(InboxMessage message, CancellationToken ct)
         {
             await _context.InboxMessages.AddAsync(message,ct);
-            await _context.SaveChangesAsync(ct);
+            //await _context.SaveChangesAsync(ct);
         }
         public async Task<bool> ExistsAsync(string messageId, string consumer, CancellationToken ct)
         {
