@@ -4,30 +4,30 @@ using MediatR;
 
 namespace Chat.Application.Features.Chats.Queries
 {
-    public sealed class GetChatByIdQueryHandler : IRequestHandler<GetChatByIdQuery, ChatDto?>
+    public sealed class GetChatByIdQueryHandler : IRequestHandler<GetChatByIdQuery, ConversationDto?>
     {
-        private readonly IChatRepository _repository;
+        private readonly IConversationRepository _repository;
 
-        public GetChatByIdQueryHandler(IChatRepository repository)
+        public GetChatByIdQueryHandler(IConversationRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<ChatDto?> Handle(GetChatByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ConversationDto?> Handle(GetChatByIdQuery request, CancellationToken cancellationToken)
         {
             var chat = await _repository.GetByIdAsync(request.ChatId);
             return chat == null ? null : MapToDto(chat);
         }
 
-        private static ChatDto MapToDto(Domain.Entities.Chat chat)
+        private static ConversationDto MapToDto(Domain.Entities.Conversation chat)
         {
-            return new ChatDto
+            return new ConversationDto
             {
                 ChatId = chat.ChatId,
                 ChatType = chat.Type.ToString(),
                 ParticipantIds = chat.ParticipantIds,
                 CreatedAt = chat.CreatedAt,
-                Messages = chat.Messages.Select(m => new ChatMessageDto
+                Messages = chat.Messages.Select(m => new MessageDto
                 {
                     MessageId = m.MessageId,
                     SenderId = m.SenderId,

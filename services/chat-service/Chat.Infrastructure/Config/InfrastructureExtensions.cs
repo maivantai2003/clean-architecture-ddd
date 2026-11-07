@@ -11,14 +11,14 @@ namespace Chat.Infrastructure.Config
     {
         public static IServiceCollection AddInfrastructureConfig(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IConversationRepository, ConversationRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
 
         public static IServiceCollection AddChatPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ChatDbContext>(options =>
+            services.AddDbContext<ConversationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });

@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using Chat.Domain.Common;
 using Chat.Domain.Entities;
+using Chat.Infrastructure.Outbox;
 
 namespace Chat.Infrastructure.Persistence
 {
-    public class ChatDbContext : DbContext
+    public class ConversationDbContext : DbContext
     {
-        public ChatDbContext(DbContextOptions<ChatDbContext> options) : base(options)
+        public ConversationDbContext(DbContextOptions<ConversationDbContext> options) : base(options)
         {
         }
 
-        public DbSet<Chat> Chats { get; set; } = null!;
+        public DbSet<Conversation> Conversations { get; set; } = null!;
         public DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,7 +30,7 @@ namespace Chat.Infrastructure.Persistence
                 c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                 c => c.ToList());
 
-            modelBuilder.Entity<Chat>(builder =>
+            modelBuilder.Entity<Conversation>(builder =>
             {
                 builder.HasKey(x => x.ChatId);
                 builder.Property(x => x.ParticipantIds)

@@ -37,7 +37,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddDbContext<ChatDbContext>(options =>
+builder.Services.AddDbContext<ConversationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddInfrastructureConfig(builder.Configuration);

@@ -5,9 +5,9 @@ namespace Chat.Application.Features.Chats.Commands
 {
     public sealed class AddChatMessageCommandHandler : IRequestHandler<AddChatMessageCommand>
     {
-        private readonly IChatRepository _repository;
+        private readonly IConversationRepository _repository;
 
-        public AddChatMessageCommandHandler(IChatRepository repository)
+        public AddChatMessageCommandHandler(IConversationRepository repository)
         {
             _repository = repository;
         }

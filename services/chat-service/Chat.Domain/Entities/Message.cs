@@ -1,6 +1,6 @@
 namespace Chat.Domain.Entities
 {
-    public sealed class ChatMessage
+    public sealed class Message
     {
         public Guid MessageId { get; private set; }
         public Guid SenderId { get; private set; }
@@ -8,9 +8,9 @@ namespace Chat.Domain.Entities
         public bool IsBot { get; private set; }
         public DateTime SentAt { get; private set; }
 
-        private ChatMessage() { }
+        private Message() { }
 
-        public ChatMessage(Guid senderId, string content, bool isBot)
+        public Message(Guid senderId, string content, bool isBot)
         {
             MessageId = Guid.NewGuid();
             SenderId = senderId;

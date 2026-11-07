@@ -4,9 +4,9 @@ namespace Chat.Infrastructure.Persistence
 {
     public sealed class UnitOfWork : IUnitOfWork
     {
-        private readonly ChatDbContext _context;
+        private readonly ConversationDbContext _context;
 
-        public UnitOfWork(ChatDbContext context)
+        public UnitOfWork(ConversationDbContext context)
         {
             _context = context;
         }

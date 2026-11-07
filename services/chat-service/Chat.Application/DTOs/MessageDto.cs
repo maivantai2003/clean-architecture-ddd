@@ -1,6 +1,6 @@
 namespace Chat.Application.DTOs
 {
-    public sealed class ChatMessageDto
+    public sealed class MessageDto
     {
         public Guid MessageId { get; init; }
         public Guid SenderId { get; init; }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Chat.Application.Features.Chats.Queries
 {
-    public sealed class GetChatsQuery : IRequest<IReadOnlyCollection<ChatDto>>
+    public sealed class GetChatsQuery : IRequest<IReadOnlyCollection<ConversationDto>>
     {
         public Guid ParticipantId { get; init; }
     }
